@@ -139,7 +139,7 @@
             z-index: 100;
         }
 
-        /* Messages de dissuasion (MODIFIÉ : Plus d'animation de disparition) */
+        /* Messages de dissuasion */
         .dissuasion-msg {
             position: absolute;
             color: #c71f6c;
@@ -147,7 +147,6 @@
             font-size: 1.5rem;
             pointer-events: none; 
             z-index: 5;
-            /* J'ai supprimé l'animation fadeOut ici */
         }
 
         /* --- ÉCRAN 4 : FINAL --- */
@@ -221,6 +220,10 @@
 </head>
 <body>
 
+    <audio id="bg-music" loop>
+        <source src="musique.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="screen-error">
         <div class="glitch-text">ERREUR 2510199628072004!!!!!</div>
         <div class="warning-text">ATTENTION KATHY VOTRE COEUR EST EN TRAIN DE SE FAIRE PIRATER</div>
@@ -255,7 +258,7 @@
             const logElement = document.getElementById('hack-log');
             const bar = document.getElementById('progress-bar');
             const logs = [
-                "Analyse du coeur de kathy...",
+               "Analyse du coeur de kathy...",
                 "Détection d'un sourire...",
                 "Connexion au serveur 'AMOUR'...",
                 "Piratage du cœur de kathy en cours...",
@@ -292,7 +295,7 @@
             document.getElementById('screen-question').style.display = 'flex';
         }
 
-        // Liste des messages de dissuasion
+        // Messages de dissuasion
         const dissuasionMessages = [
             "T'es sahhhhh ?",
             "Vraiment belek  ?",
@@ -301,35 +304,29 @@
             "Dernière chance !",
             "Je vais pleurer...",
             "oh nom que clique sur oui"
+
         ];
 
-        // Fonction pour faire apparaitre un message
         function spawnMessage() {
             const screen = document.getElementById('screen-question');
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('dissuasion-msg');
             msgDiv.innerText = dissuasionMessages[Math.floor(Math.random() * dissuasionMessages.length)];
             
-            // Position aléatoire sur l'écran
             msgDiv.style.left = Math.random() * (window.innerWidth - 100) + 'px';
             msgDiv.style.top = Math.random() * (window.innerHeight - 100) + 'px';
             
             screen.appendChild(msgDiv);
-
-            // MODIFIÉ : J'ai supprimé le code qui effaçait le message
-            // Ils vont donc s'accumuler sur l'écran !
         }
 
         // Le bouton NON qui fuit
         function moveButton() {
-            // On fait apparaitre un message !
             spawnMessage();
 
             const btnNon = document.getElementById('btn-non');
             const x = Math.random() * (window.innerWidth - 200);
             const y = Math.random() * (window.innerHeight - 200);
             
-            // Si on insiste trop, le bouton NON devient OUI
             if(Math.random() > 0.8) {
                 btnNon.innerText = "OUI";
                 btnNon.style.backgroundColor = "#ff4d6d";
@@ -344,6 +341,15 @@
 
         // --- LOGIQUE ACCEPTATION ---
         function acceptProposal() {
+            // Lancement de la musique
+            const music = document.getElementById('bg-music');
+            
+            // --- C'EST ICI QU'ON RÈGLE LE TEMPS (en secondes) ---
+            music.currentTime = 30; 
+            // ----------------------------------------------------
+            
+            music.play();
+
             const btnOui = document.getElementById('btn-oui');
             let scale = 1;
             const grow = setInterval(() => {
@@ -356,7 +362,7 @@
             }, 30);
         }
 
-        // --- LOGIQUE FINAL (PLUIE) ---
+        // --- LOGIQUE FINAL ---
         function showFinal() {
             document.getElementById('screen-question').style.display = 'none';
             document.getElementById('screen-final').style.display = 'flex';
@@ -372,35 +378,32 @@
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.animationDuration = Math.random() * 2 + 3 + 's';
             document.getElementById('screen-final').appendChild(heart);
-            
             setTimeout(() => { heart.remove() }, 5000);
         }
 
         function createPhoto() {
-            // -----------------------------------------------------------------
-            // REMETS TES PHOTOS ICI !
-            // -----------------------------------------------------------------
+            // --- TES PHOTOS ---
             const myPhotos = [
                 "1.jpg", 
                 "2.jpg", 
                 "3.jpg",
-		"4.jpg",
-		"5.jpg",
-		"6.jpg",
-		"7.jpg",
-		"8.jpg",
+				"4.jpg",
+				"5.jpg",
+				"6.jpg",
+				"7.jpg",
+				"8.jpg",
             ];
 
             const photo = document.createElement('img');
-            photo.src = myPhotos[Math.floor(Math.random() * myPhotos.length)];
-            photo.classList.add('falling-photo');
-            photo.style.left = Math.random() * 100 + 'vw';
-            photo.style.animationDuration = Math.random() * 2 + 4 + 's';
-            document.getElementById('screen-final').appendChild(photo);
-
-            setTimeout(() => { photo.remove() }, 6000);
+            if (myPhotos.length > 0) {
+                photo.src = myPhotos[Math.floor(Math.random() * myPhotos.length)];
+                photo.classList.add('falling-photo');
+                photo.style.left = Math.random() * 100 + 'vw';
+                photo.style.animationDuration = Math.random() * 2 + 4 + 's';
+                document.getElementById('screen-final').appendChild(photo);
+                setTimeout(() => { photo.remove() }, 6000);
+            }
         }
     </script>
 </body>
-
 </html>
